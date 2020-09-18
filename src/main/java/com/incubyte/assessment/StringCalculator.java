@@ -35,17 +35,18 @@ public class StringCalculator {
          */
 
         List<Integer> list = new ArrayList<Integer>();
-        String[] inputArray = numbers.split(",");
+        String[] inputArray = numbers.split("[\n|,]");
 
         for (String input : inputArray) {
-            if (!input.isEmpty()) {
-                try {
-                    list.add(Integer.parseInt(input));
-                } catch (NumberFormatException ex) {
-                    throw new StringCalculatorException(ex);
-                }
-
+            if (input.isEmpty()) {
+                throw new StringCalculatorException("Empty strings not allowed");
             }
+            try {
+                list.add(Integer.parseInt(input));
+            } catch (NumberFormatException ex) {
+                throw new StringCalculatorException(ex);
+            }
+
         }
         return list;
     }

@@ -65,20 +65,18 @@ public class StringCalculatorTest {
     @Test
     public void testOneIntegerAndCommaString() {
         try {
-            int sum = calculator.add("1,");
-            assertEquals(1, sum);
+            calculator.add("1,");
         } catch (StringCalculatorException e) {
-            e.printStackTrace();
+            assertTrue(e.getMessage().equals("Empty strings not allowed"));
         }
     }
     
     @Test
     public void testCommaAndOneIntegerString() {
         try {
-            int sum = calculator.add(",1");
-            assertEquals(1, sum);
+            calculator.add(",1");
         } catch (StringCalculatorException e) {
-            e.printStackTrace();
+            assertTrue(e.getMessage().equals("Empty strings not allowed"));
         }
     }
     
@@ -109,6 +107,16 @@ public class StringCalculatorTest {
             int sum = calculator.add("1,2,3");
             assertEquals(6, sum);
         } catch (StringCalculatorException e) {
+        }
+    }
+    
+    @Test
+    public void testCommaSeparatedNumbersWithNewLine() {
+        try {
+            int sum = calculator.add("1\n2,3");
+            assertEquals(6, sum);
+        } catch (StringCalculatorException e) {
+            e.printStackTrace();
         }
     }
 
