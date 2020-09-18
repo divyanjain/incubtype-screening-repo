@@ -1,6 +1,7 @@
 package assessmentcom.incubyte.assessment.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
@@ -61,46 +62,48 @@ public class StringCalculatorTest {
             e.printStackTrace();
         }
     }
-    
+
     @Test
     public void testOneIntegerAndCommaString() {
         try {
-            calculator.add("1,");
+            int sum = calculator.add("1,");
+            assertEquals(1, sum);
         } catch (StringCalculatorException e) {
-            assertTrue(e.getMessage().equals("Empty strings not allowed"));
+            e.printStackTrace();
         }
     }
-    
+
     @Test
     public void testCommaAndOneIntegerString() {
         try {
-            calculator.add(",1");
+            int sum = calculator.add(",1");
+            assertEquals(1, sum);
         } catch (StringCalculatorException e) {
-            assertTrue(e.getMessage().equals("Empty strings not allowed"));
+            e.printStackTrace();
         }
     }
-    
+
     @Test
     public void testInvalidString() {
+        Exception ex = null;
         try {
             calculator.add("invalidString");
         } catch (Exception e) {
-            assertTrue(e.getMessage().equals("java.lang.NumberFormatException: For input string: \"invalidString\""));
+            ex = e;
         }
+        assertNotNull(ex);
+        assertTrue(ex.getMessage().equals("java.lang.NumberFormatException: For input string: \"invalidString\""));
     }
-    
- // Commenting below. The restrictions for 2 numbers is not needed anymore as of Req#2
+
+    // Commenting below. The restrictions for 2 numbers is not needed anymore as of
+    // Req#2
     /*
-    @Test
-    public void testCommaSeparatedThreeIntegerString() {
-        try {
-            int sum = calculator.add("1,2,3");
-        } catch (StringCalculatorException e) {
-            assertTrue(e.getMessage().equals("Input length is restricted to max 2 comma separated numbers"));
-        }
-    }
-    */
-    
+     * @Test public void testCommaSeparatedThreeIntegerString() { try { int sum =
+     * calculator.add("1,2,3"); } catch (StringCalculatorException e) {
+     * assertTrue(e.getMessage().
+     * equals("Input length is restricted to max 2 comma separated numbers")); } }
+     */
+
     @Test
     public void testCommaSeparatedThreeIntegerString() {
         try {
@@ -109,7 +112,7 @@ public class StringCalculatorTest {
         } catch (StringCalculatorException e) {
         }
     }
-    
+
     @Test
     public void testCommaSeparatedNumbersWithNewLine() {
         try {
@@ -118,6 +121,18 @@ public class StringCalculatorTest {
         } catch (StringCalculatorException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void testCommaSeparatedNumbersWithNewLineAndEmptyString() {
+        Exception ex = null;
+        try {
+            calculator.add("1,\n");
+        } catch (StringCalculatorException e) {
+            ex = e;
+        }
+        assertNotNull(ex);
+        assertTrue(ex.getMessage().equals("New line character not allowed at the end."));
     }
 
 }

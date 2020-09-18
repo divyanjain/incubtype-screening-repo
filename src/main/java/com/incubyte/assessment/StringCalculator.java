@@ -13,11 +13,7 @@ public class StringCalculator {
 
         List<Integer> list = new ArrayList<Integer>();
 
-        try {
-            list.addAll(parseInputString(numbers));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        list.addAll(parseInputString(numbers));
 
         for (Integer item : list) {
             sum += item;
@@ -26,20 +22,15 @@ public class StringCalculator {
     }
 
     private List<Integer> parseInputString(String numbers) throws StringCalculatorException {
-        // Commenting below. The restrictions for 2 numbers is not needed anymore as of
-        // Req#2
-        /*
-         * if(inputArray.length>2) { throw new
-         * StringCalculatorException("Input length is restricted to max 2 comma separated numbers"
-         * ); }
-         */
-
         List<Integer> list = new ArrayList<Integer>();
+        if (numbers.matches(".*\\n")) {
+            throw new StringCalculatorException("New line character not allowed at the end.");
+        }
         String[] inputArray = numbers.split("[\n|,]");
 
         for (String input : inputArray) {
             if (input.isEmpty()) {
-                throw new StringCalculatorException("Empty strings not allowed");
+                list.add(0);
             }
             try {
                 list.add(Integer.parseInt(input));
