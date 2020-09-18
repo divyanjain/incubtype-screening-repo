@@ -9,6 +9,10 @@ public class StringCalculator {
         }
 
         String[] inputArray = numbers.split(",");
+        
+        if(inputArray.length>2) {
+            throw new StringCalculatorException("Input length is restricted to max 2 comma separated numbers");
+        }
         for (String input : inputArray) {
             if (!input.isEmpty()) {
                 try {

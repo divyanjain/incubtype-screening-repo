@@ -87,8 +87,17 @@ public class StringCalculatorTest {
         try {
             calculator.add("invalidString");
         } catch (Exception e) {
-            assertTrue(e.getCause() instanceof NumberFormatException);
-            e.printStackTrace();
+            assertTrue(e.getMessage().equals("java.lang.NumberFormatException: For input string: \"invalidString\""));
+        }
+    }
+    
+    @Test
+    public void testCommaSeparatedThreeIntegerString() {
+        try {
+            int sum = calculator.add("1,2,3");
+            assertEquals(3, sum);
+        } catch (StringCalculatorException e) {
+            assertTrue(e.getMessage().equals("Input length is restricted to max 2 comma separated numbers"));
         }
     }
 
