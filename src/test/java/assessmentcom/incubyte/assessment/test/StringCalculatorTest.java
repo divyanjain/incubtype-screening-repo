@@ -134,5 +134,27 @@ public class StringCalculatorTest {
         assertNotNull(ex);
         assertTrue(ex.getMessage().equals("New line character not allowed at the end."));
     }
+    
+    @Test
+    public void testNumbersSeperatedByNewLineAndNonCommaDelimiter() {
+        try {
+            int sum = calculator.add("//;\n1,2\n3;4");
+            assertEquals(10, sum);
+        } catch (StringCalculatorException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testNumbersSeperatedByNewLineAndNonCommaDelimiterAndEmptyString() {
+        Exception ex = null;
+        try {
+            calculator.add("//;\n1,2\n3;4;\n");
+        } catch (StringCalculatorException e) {
+            ex = e;
+        }
+        assertNotNull(ex);
+        assertTrue(ex.getMessage().equals("New line character not allowed at the end."));
+    }
 
 }

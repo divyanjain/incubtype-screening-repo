@@ -2,6 +2,8 @@ package com.incubyte.assessment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringCalculator {
 
@@ -22,15 +24,35 @@ public class StringCalculator {
     }
 
     private List<Integer> parseInputString(String numbers) throws StringCalculatorException {
+
         List<Integer> list = new ArrayList<Integer>();
-        if (numbers.matches(".*\\n")) {
+        String delimiterString = ",";
+        String inputString = "";
+
+        Pattern delimiterPattern = Pattern.compile("((//(.+)\n)?)((.+|\n)*)");
+        Matcher delimiterMatcher = delimiterPattern.matcher(numbers);
+        if (delimiterMatcher.find()) {
+            String delimiterGroup = delimiterMatcher.group(3);
+            if (delimiterGroup != null && !delimiterGroup.isEmpty()) {
+                delimiterString = delimiterString + "|" + delimiterGroup;
+            }
+
+            inputString = delimiterMatcher.group(4);
+            Pattern p = Pattern.compile(".+([" + delimiterString + "][(\r\n)|(\n)])");
+            Matcher m = p.matcher(inputString);
+            if (m.find()) {
+                throw new StringCalculatorException("New line character not allowed at the end.");
+            }
+        }
+
+        String[] inputArray = inputString.split("[\n|" + delimiterString + "]");
+        if (inputArray[inputArray.length - 1].isEmpty()) {
             throw new StringCalculatorException("New line character not allowed at the end.");
         }
-        String[] inputArray = numbers.split("[\n|,]");
-
         for (String input : inputArray) {
             if (input.isEmpty()) {
                 list.add(0);
+                continue;
             }
             try {
                 list.add(Integer.parseInt(input));
