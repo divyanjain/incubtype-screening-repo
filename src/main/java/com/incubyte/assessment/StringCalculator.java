@@ -46,21 +46,28 @@ public class StringCalculator {
         }
 
         String[] inputArray = inputString.split("[\n|" + delimiterString + "]");
-        if (inputArray[inputArray.length - 1].isEmpty()) {
-            throw new StringCalculatorException("New line character not allowed at the end.");
-        }
+        StringBuilder negativeNumbers = new StringBuilder();
         for (String input : inputArray) {
             if (input.isEmpty()) {
                 list.add(0);
                 continue;
             }
             try {
-                list.add(Integer.parseInt(input));
+                int number = Integer.parseInt(input);
+                if (number < 0) {
+                    negativeNumbers.append((negativeNumbers.toString().isEmpty() ? "" : " , "));
+                    negativeNumbers.append(number);
+                }
+                list.add(number);
             } catch (NumberFormatException ex) {
                 throw new StringCalculatorException(ex);
             }
-
         }
+
+        if (!negativeNumbers.toString().isEmpty()) {
+            throw new StringCalculatorException("negatives not allowed - [" + negativeNumbers + "]");
+        }
+
         return list;
     }
 }

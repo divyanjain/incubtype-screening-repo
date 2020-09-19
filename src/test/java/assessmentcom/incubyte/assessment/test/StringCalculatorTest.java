@@ -156,5 +156,31 @@ public class StringCalculatorTest {
         assertNotNull(ex);
         assertTrue(ex.getMessage().equals("New line character not allowed at the end."));
     }
+    
+    @Test
+    public void testNumbersSeperatedByNewLineAndNonCommaDelimiterAndNegativeNumber() {
+        Exception ex = null;
+        try {
+            calculator.add("//;\n1,2\n3;4;-1");
+        } catch (StringCalculatorException e) {
+            ex = e;
+        }
+        assertNotNull(ex);
+        assertTrue(ex.getMessage().equals("negatives not allowed - [-1]"));
+    }
+    
+
+    
+    @Test
+    public void testNumbersSeperatedByNewLineAndNonCommaDelimiterAndNegativeNumbers() {
+        Exception ex = null;
+        try {
+            calculator.add("//;\n1,2\n3;4;-1;8;-4;6");
+        } catch (StringCalculatorException e) {
+            ex = e;
+        }
+        assertNotNull(ex);
+        assertTrue(ex.getMessage().equals("negatives not allowed - [-1 , -4]"));
+    }
 
 }
