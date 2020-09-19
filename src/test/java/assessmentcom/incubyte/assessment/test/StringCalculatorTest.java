@@ -146,6 +146,26 @@ public class StringCalculatorTest {
     }
     
     @Test
+    public void testNumbersSeperatedByNewLineAndNonCommaDelimiterWithVaryingLength() {
+        try {
+            int sum = calculator.add("//[**]\n1,2\n3**4");
+            assertEquals(10, sum);
+        } catch (StringCalculatorException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testNumbersSeperatedByNewLineAndNonCommaDelimitersWithVaryingLengths() {
+        try {
+            int sum = calculator.add("//[**][;][::]\n1,2\n3**4;7::8\n5");
+            assertEquals(30, sum);
+        } catch (StringCalculatorException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
     public void testNumbersSeperatedByNewLineAndNonCommaDelimiterAndEmptyString() {
         Exception ex = null;
         try {
@@ -181,6 +201,26 @@ public class StringCalculatorTest {
         }
         assertNotNull(ex);
         assertTrue(ex.getMessage().equals("negatives not allowed - [-1 , -4]"));
+    }
+    
+    @Test
+    public void testNumbersSeperatedByNewLineAndNonCommaDelimiterAndLargeNumbers() {
+        try {
+            int sum=calculator.add("//;\n1,2\n3;4;8;6000;6");
+            assertEquals(24, sum);
+        } catch (StringCalculatorException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void testMultipleDelimiters() {
+        try {
+            int sum=calculator.add("//[*][%]\n1*2%3");
+            assertEquals(6, sum);
+        } catch (StringCalculatorException e) {
+            e.printStackTrace();
+        }
     }
 
 }

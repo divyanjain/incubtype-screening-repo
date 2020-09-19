@@ -23,21 +23,21 @@ public class StringCalculator {
         return sum;
     }
 
-    private List<Integer> parseInputString(String numbers) throws StringCalculatorException {
+    private static final Pattern DELIMITER_PATTERN = Pattern.compile("((//(\\[?(.+)\\]?)*\n)?)((.+|\n)*)");
 
-        List<Integer> list = new ArrayList<Integer>();
+    private List<Integer> parseInputString(String numbers) throws StringCalculatorException {
         String delimiterString = ",";
         String inputString = "";
 
-        Pattern delimiterPattern = Pattern.compile("((//(.+)\n)?)((.+|\n)*)");
-        Matcher delimiterMatcher = delimiterPattern.matcher(numbers);
+        Matcher delimiterMatcher = DELIMITER_PATTERN.matcher(numbers);
         if (delimiterMatcher.find()) {
             String delimiterGroup = delimiterMatcher.group(3);
             if (delimiterGroup != null && !delimiterGroup.isEmpty()) {
-                delimiterString = delimiterString + "|" + delimiterGroup;
+                delimiterString = delimiterString + "|"
+                        + (delimiterGroup.replace("][", "|").replace("[", "").replace("]", ""));
             }
 
-            inputString = delimiterMatcher.group(4);
+            inputString = delimiterMatcher.group(5);
             Pattern p = Pattern.compile(".+([" + delimiterString + "][(\r\n)|(\n)])");
             Matcher m = p.matcher(inputString);
             if (m.find()) {
@@ -45,11 +45,16 @@ public class StringCalculator {
             }
         }
 
-        String[] inputArray = inputString.split("[\n|" + delimiterString + "]");
+        return parseInputString(inputString, delimiterString);
+    }
+
+    private List<Integer> parseInputString(String inputString, String pipeSeparatedDelimiters)
+            throws StringCalculatorException {
+        String[] inputArray = inputString.split("[\n|" + pipeSeparatedDelimiters + "]");
         StringBuilder negativeNumbers = new StringBuilder();
+        List<Integer> list = new ArrayList<Integer>();
         for (String input : inputArray) {
             if (input.isEmpty()) {
-                list.add(0);
                 continue;
             }
             try {
@@ -57,8 +62,11 @@ public class StringCalculator {
                 if (number < 0) {
                     negativeNumbers.append((negativeNumbers.toString().isEmpty() ? "" : " , "));
                     negativeNumbers.append(number);
+                } else if (number > 1000) {
+                    System.out.println("Ignoring numbers greater than 1000");
+                } else {
+                    list.add(number);
                 }
-                list.add(number);
             } catch (NumberFormatException ex) {
                 throw new StringCalculatorException(ex);
             }
